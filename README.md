@@ -1,205 +1,98 @@
-# ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Project 3: Web APIs & NLP
+# Reddit Scraper
+---
 
-### Description
+### Problem Statement
+---
+Ever wonder if someone is talking about hockey or football?  Probably not.  Or if you do, you just choose to cheer, GO TEAM GO! Yay Sports!  You don't know how to fit in or what to say.
 
-In week five we've learned about a few different classifiers. In week six we'll learn about webscraping, APIs, and Natural Language Processing (NLP). This project will put those skills to the test.
+Well computers have your back.  More specifically this natural language processiong model has your back.  It has been studying the way people talk about football and hockey.  You can ask it to evaluate what you want to say and it will tell you if it is more likely something you would hear at the rink or the stadium.
 
-For project 3, your goal is two-fold:
-1. Using Reddit's API, you'll collect posts from two subreddits of your choosing.
-2. You'll then use various NLP techniques to process your data before training a range of classifiers to determine where a given post came from.
+With these tools you can collect the phrases that matter, study them, and then use our multinomial naive bayes model to test your vocabulary to see who you sound like.  
 
+Maybe you don't care about hockey and football.  That's ok, but maybe you have the same question about two different genres of anything.  Anything on Reddit that is.  Go ahead and ask it about any two topics (subreddits).  It will study these two topics and let you know how confident it is about predicting which genre the quote came from.  
 
-#### About the API
-
-In 2023, Reddit proposed and underwent a series of changes to its API that greatly affected the ways that users, developers, and academics interact with and access the troves of data that its community freely creates.
-
-While the cost of data storage cannot be ignored, the monetization of its API has led to a shutdown of massively popular third-party and stifled [important research](https://arxiv.org/search/?query=reddit&searchtype=all&source=header) in the social sciences (community formation/network analysis, hate speech, discourse analysis, etc.), cybersecurity (bot detection), and—importantly for us this week—the very large and diverse world of natural language processing (semantic analysis, translation, topic modeling, disambiguation, relationship extraction, etc).
-
-While APIs like Pushshift that collected and stored Reddit's data from its inception are no longer accessible, we can still retrieve a limited amount of data directly from [Reddit's API](https://www.reddit.com/dev/api/). As with anytime you begin interacting with a new tool, you should familiarize yourself as much as possible with the documentation.
-
-**We will do a walkthrough of how to access and submit a simple request to the Reddit API together.**
+To be fair it might take a while though, depending on how popular the subreddit is, so this will take time, but in a couple of weeks you will be talking the talk.  And who knows, maybe you do like football.  You could be ready in time for the big game.  Go BRUINS!  
 
 ---
-## Checkpoints and Advice
 
-If you aren't familiar with [reddit](https://www.reddit.com/), go check it out and browse different subreddits. Each subreddit is like a forum on a different topic. [Here's a list of subreddits by topic.](https://www.reddit.com/r/ListOfSubreddits/wiki/listofsubreddits)
+### About the Data
+---
+In 2023, Reddit proposed and underwent a series of changes to its API that greatly affected the ways that users, developers, and academics interact with and access the troves of data that its community freely creates.
 
-Data Choices
-- In your project you can classify posts, comments, titles, or some combination of those things. What you choose will partly determine how difficult your data cleaning will be and how challenging the classification task will be for your algorithms. In your presentation and executive summary, **tell us what you used**.
-- You can also include other information from posts or comments as features, but you must include some text.
+With these changes, the process of freely collecting data has slowed down.  There are limits in place with an API request rate of 60 rps (requests per second).  You can also only requests 100 posts at a time.  Lastly, there are only 1,000 of the most hot and new posts available in a subreddit.  Therefore, it is a moving target as to how many posts you can scrape.
 
-Subreddit Selection
-- The more similar the subreddits are, the more challenging (and interesting?!) your project will become.
-- Choose your subreddits as soon as you can and let us know your choices.  Consider the breakdown of the post count for each as well.
+For this project, so far we have accumulated 2422 posts, 1506 from the NFL subreddit and 916 from the NHL
 
-Data collection
-- You should have a script written to retrieve data from your subreddits of choice as soon as possible. Because the API only allows us to retrieve 1000 of the most recent new and popular posts at time, this script should be written so that you can execute it from the command line at regular intervals.
-- The more data you can pull the better for your classifier. **Ideally you will want data from at least 3000 unique, non-null posts from each subreddit.**
-
+---
+### How to scrape posts
+---
+* Launch the python script. 
+* It will prompt you for your credentials and reddit communities of choice.
+* It will then gather the data and save the files onto your computer.
+* While you study up on the lingo, so will the model.
+* After you feel comfortable, give it a shot!
 
 ---
 
 ### Requirements
-
-- Gather and prepare your data using the `requests` library in a Python script.
-- Script suggestions:
-    - First time it runs:
-        - Gets user input on subreddits they want to collect information from
-        - Asks user for their API credentials
-        - Stores this information in a JSON file
-    - Submits requests to API until maximum number of posts have been retrieved
-    - Writes/appends post data to a singular file
-    - Creates and updates a transaction log recording the number of posts retrieved per script execution, the datetime of its execution, and the total number of posts retrieved to date
-        - This would ensure that the script was executed over several days' time
-    - Other considerations
-        - Added functionality to drop data you are confident you will not want for EDA or modeling
-        - Added functionality to drop duplicate posts from each successful round of API requests
-        - *Advanced bonus*: schedule a process for the script to be run automatically at regular intervals to avoid having to do it manually
-- **Create and compare at least two models**. These can be any classifier of your choosing: logistic regression, Naive Bayes, KNN, Random Forest Classifier, etc.
-  - **Bonus**: use a Naive Bayes classifier
-- Try to **build a robust commit history** on GHE for this project.
-- A Jupyter Notebook with your analysis for a **peer audience of data scientists.**
-- An executive summary of your results.
-- A short presentation outlining your process and findings for a semi-technical audience, shoot for **8 minutes**.
-
-**Pro Tip:** You can find a good example executive summary [here](https://www.proposify.biz/blog/executive-summary).
+---
+* Reddit login, password, api client id, api client secret, and user agent name.
+* A computer with an internet connection that is setup to run python script.
 
 ---
 
-### Necessary Deliverables / Submission
+### Model Reviews
+---
 
-- Code and executive summary must be in a clearly commented Jupyter Notebook.
-- You must submit your slide deck.
-- Deadlines:
-    - **Materials submitted**: 12 noon ET/ 9 AM PT, Friday, October 11th
-    - **Presentation**: 12:30 PM ET/ 930 AM PT, Friday, October 11th
+For this problem we ran the extracted post titles through several model configurations and tune their hyperparameters.  We also decided that we should focus on F1 Scores and Accuracy.  F1 scores hone in on the accuracy the model carries for identifying the individual classes.  We want our model to be right about both classes.
+
+Before getting to the good stuff, keep in mind the null model.  This model is essentially the baseline, if you guessed based on how may NFL posts there were vs how many NHL posts.  The NFL was represented by 62.18% and the NHL by 37.82% of the posts.  This is not a severely imbalanced dataset, but it is a favored on one side which makes it a little more challenging.  Also, to consider, the vocabulary of the two groups are both fans of sports.  Their passion, energy, and word choice can crossover pretty well.
+
+A short summary of the findings:
+
+* **Logisitic Regression**
+    * The CVEC model was overfit roughly 75% accurate on the testing data and 87% on the training data bearing an F1 score was 65% and 72% ROC AUC score.
+    * The TVEC model was also roughly 75% but not overfit.  It did have a lower F1 score at 58% and ROC AUC at 69%
+* **k-Nearest Neighbors**
+    * The CVEC model was even more overfit roughly 65% accurate on the testing data and 85% on the training data bearing an F1 score was 59% and 65% ROC AUC score.
+    * The TVEC model did better with accuracy at roughly 77% but not overfit.  It did have a lower F1 score at 68% and ROC AUC at 75% 
+* **Multinomial Naive Bayes**
+    * The CVEC model was lightly overfit roughly 78% accurate on the testing data and 86% on the training data bearing an F1 score was 69% and 75% ROC AUC score.
+    * The TVEC model did better with accuracy at roughly 77% but not overfit.  It did have a lower F1 score at 66% and ROC AUC at 73% 
+* **Random Forests**
+    * The CVEC model was not overfit roughly 70% accurate on the testing data and 72% on the training data bearing an F1 score was 41% and 62% ROC AUC score.
+    * The TVEC model did better with accuracy at roughly 68% but not overfit.  It did have a lower F1 score at 35% and ROC AUC at 59%
 
 ---
 
-## Rubric
-You should make sure that you consider and/or follow most if not all of the considerations/recommendations outlined below **while** working through your project.
-
-For Project 3 the evaluation categories are as follows:<br>
-**The Data Science Process**
-- Problem Statement
-- Data Collection
-- Data Cleaning & EDA
-- Preprocessing & Modeling
-- Evaluation and Conceptual Understanding
-- Conclusion and Recommendations
-
-**Organization and Professionalism**
-- Organization
-- Visualizations
-- Python Syntax and Control Flow
-- Presentation
-
-**Scores will be out of 30 points based on the 10 categories in the rubric.** <br>
-*3 points per section*<br>
-
-| Score | Interpretation |
-| --- | --- |
-| **0** | *Project fails to meet the minimum requirements for this item.* |
-| **1** | *Project meets the minimum requirements for this item, but falls significantly short of portfolio-ready expectations.* |
-| **2** | *Project exceeds the minimum requirements for this item, but falls short of portfolio-ready expectations.* |
-| **3** | *Project meets or exceeds portfolio-ready expectations; demonstrates a thorough understanding of every outlined consideration.* |
-
-
-### The Data Science Process
-
-**Problem Statement**
-- Is it clear what the goal of the project is?
-- What type of model will be developed?
-- How will success be evaluated?
-- Is the scope of the project appropriate?
-- Is it clear who cares about this or why this is important to investigate?
-- Does the student consider the audience and the primary and secondary stakeholders?
-
-**Data Collection**
-- Was enough data gathered to generate a significant result?
-- Was data collected that was useful and relevant to the project?
-- Was data collection and storage optimized through custom functions, pipelines, and/or automation?
-- Was thought given to the server receiving the requests such as considering number of requests per second?
-
-**Data Cleaning and EDA**
-- Are missing values imputed/handled appropriately?
-- Are distributions examined and described?
-- Are outliers identified and addressed?
-- Are appropriate summary statistics provided?
-- Are steps taken during data cleaning and EDA framed appropriately?
-- Does the student address whether or not they are likely to be able to answer their problem statement with the provided data given what they've discovered during EDA?
-
-**Preprocessing and Modeling**
-- Is text data successfully converted to a matrix representation?
-- Are methods such as stop words, stemming, and lemmatization explored?
-- Does the student properly split and/or sample the data for validation/training purposes?
-- Does the student test and evaluate a variety of models to identify a production algorithm (**AT MINIMUM:** two classification models, **BONUS:** try a Naive Bayes)?
-- Does the student defend their choice of production model relevant to the data at hand and the problem?
-- Does the student explain how the model works and evaluate its performance successes/downfalls?
-
-**Evaluation and Conceptual Understanding**
-- Does the student accurately identify and explain the baseline score?
-- Does the student select and use metrics relevant to the problem objective?
-- Does the student interpret the results of their model for purposes of inference?
-- Is domain knowledge demonstrated when interpreting results?
-- Does the student provide appropriate interpretation with regards to descriptive and inferential statistics?
-
-**Conclusion and Recommendations**
-- Does the student provide appropriate context to connect individual steps back to the overall project?
-- Is it clear how the final recommendations were reached?
-- Are the conclusions/recommendations clearly stated?
-- Does the conclusion answer the original problem statement?
-- Does the student address how findings of this research can be applied for the benefit of stakeholders?
-- Are future steps to move the project forward identified?
-
-
-### Organization and Professionalism
-
-**Project Organization**
-- Are modules imported correctly (using appropriate aliases)?
-- Are data imported/saved using relative paths?
-- Does the README provide a good executive summary of the project?
-- Is markdown formatting used appropriately to structure notebooks?
-- Are there an appropriate amount of comments to support the code?
-- Are files & directories organized correctly?
-- Are there unnecessary files included?
-- Do files and directories have well-structured, appropriate, consistent names?
-- Is there a robust commit history?
-
-**Visualizations**
-- Are sufficient visualizations provided?
-- Do plots accurately demonstrate valid relationships?
-- Are plots labeled properly?
-- Are plots interpreted appropriately?
-- Are plots formatted and scaled appropriately for inclusion in a notebook-based technical report?
-
-**Python Syntax and Control Flow**
-- Is care taken to write human readable code?
-- Is the code syntactically correct (no runtime errors)?
-- Does the code generate desired results (logically correct)?
-- Does the code follows general best practices and style guidelines?
-- Are Pandas functions used appropriately?
-- Are `sklearn` and `NLTK` methods used appropriately?
-
-**Presentation**
-- Is the problem statement clearly presented?
-- Does a strong narrative run through the presentation building toward a final conclusion?
-- Are the conclusions/recommendations clearly stated?
-- Is the level of technicality appropriate for the intended audience?
-- Is the student substantially over or under time?
-- Does the student appropriately pace their presentation?
-- Does the student deliver their message with clarity and volume?
-- Are appropriate visualizations generated for the intended audience?
-- Are visualizations necessary and useful for supporting conclusions/explaining findings?
-
+### Findings
+---
+The Multiomial Naive Bayes model with the CVEC transformer appears to be the favorite for this problem.  It has a combination of the best F1 score and overall Accuracy.  The model has some overfitting, but could perhaps be further tuned to bring the scores in line.  It should perform over 15% better than the null model.  On that note, whats next.
 
 ---
 
-### Why did we choose this project for you?
-This project covers three of the biggest concepts we cover in the class: Classification Modeling, Natural Language Processing and Data Wrangling/Acquisition.
+### Next Steps
+---
 
-Part 1 of the project focuses on **Data wrangling/gathering/acquisition**. This is a very important skill as not all the data you will need will be in clean CSVs or a single table in SQL.  There is a good chance that wherever you land you will have to gather some data from some unstructured/semi-structured sources; when possible, requesting information from an API, but often scraping it because they don't have an API (or it's terribly documented).
+While the model selected did well, an improvement of over 15% from the null model, it could be improved further.  Some of these steps would be:
 
-Part 2 of the project focuses on **Natural Language Processing** and converting standard text data (like Titles and Comments) into a format that allows us to analyze it and use it in modeling.
+* Gather more data.  With time on our side, data can be regularly fetched and the model updated.
+* Consider further text preprocessing.  Finer tooth combing to remove text and characters could help improve the accuracy and F1 scores.  Though this needs to be done with care to avoid overfitting.  Also, this could affect transferability to other topics.  
+* Boosting could be particularly helpful.  The TVEC transformed models and both Naive Bayes were not particularly overfit.  Boosting is a series of models that operate one after the other attempting to improve on the failures of the prior model.  This way it learns the hard parts.  In this case that will help.
+* While not terribly imbalanced, the data was a bit imbalanced.  The data is free so further collection could help, but it could be a condition of the popularity of one subreddit over the other.  Synthetic data approaches, undersampling the heavier class and oversampling the ligher class would help some.
+* Lastly stacking is a powerful ensemble technique that (as it sounds) places a model on top of other models.
+* An interface between the user and the model to test their new vocabulary needs to be developped.
+* The python script does not run in git bash (getpass issue) but does in other command line terminals.  The root cause of this issue needs to be fleshed out.
 
-Part 3 of the project focuses on **Classification Modeling**.  Given that project 2 was a regression focused problem, we needed to give you a classification focused problem to practice the various models, means of assessment and preprocessing associated with classification.   
+---
+
+### Conclusion
+---
+
+While the multinomial naive bayes model is doing better than the null model, there is still quite a bit to learn from the resources available, making it not ready for production.  Namely, time to collect more data and also progressing through the techniques above.  The web scraping tool could be used in a prototype environment while the terminal platform issued is resolved.
+
+
+
+
+
+
